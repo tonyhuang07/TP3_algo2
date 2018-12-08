@@ -1,4 +1,6 @@
 INIFITO = 99999999
+INDICE_PESO = 1
+INDICE_ARISTA = 0
 from grafo import *
 from heap import *
 from cola import *
@@ -6,56 +8,10 @@ from cola import *
 import random
 
 
-
-# class Vuelo:
-
-# 	def __init__(self, origen, destino, tiempo, precio, cantidad):
-# 		self.origen = origen
-# 		self.destino = destino
-# 		self.tiempo = tiempo
-# 		self.precio = precio
-# 		self.cantidad = cantidad
-
-# 	def obtener_origen(self)
-# 		return self.origen
-
-# 	def obtener_destino(self)
-# 		return self.destino
-
-# 	def obtener_tiempo(self)
-# 		return self.tiempo
-
-# 	def obtener_precio(self)
-# 		return self.precio
-
-# 	def obtener_cantidad(self)
-# 		return self.cantidad
-
-# class v:
-
-# 	def __init__(self, ciudad, codigo, latitud, longitud):
-# 		self.ciudad = ciudad
-# 		self.codigo = codigo
-# 		self.latitud = latitud
-# 		self.longitud = longitud
-
-# 	def obtener_ciudad(self)
-# 		return self.ciudad
-
-# 	def obtener_codigo(self)
-# 		return self.codigo
-
-# 	def obtener_latitud(self)
-# 		return self.latitud
-
-# 	def obtener_longitud(self)
-# 		return self.longitud
-
-
 def _camino_mas(grafo, origen):
 	factor = {}
 	padre = {}
-	for v in grafo.obtener_vertices(): #falta la funcion
+	for v in grafo.obtener_vertices():
 		factor[v] = INIFITO
 
 	factor[origen] = 0
@@ -64,17 +20,17 @@ def _camino_mas(grafo, origen):
 	heap_factor.encolar((origen,factor[origen]))
 	while not heap_factor.esta_vacio():
 		v = heap_factor.desencolar()[0]
-		for distino in grafo.adyacentes(v):
-			numero_factor = factor[v] + grafo.peso(v, distino)
-			if numero_factor < factor[distino]:
-				factor[distino] = numero_factor 
-				padre[distino] = v
-				heap_factor.encolar((distino, factor[distino]))
+		for destino in grafo.adyacentes(v):
+			numero_factor = factor[v] + grafo.peso(v, destino)
+			if numero_factor < factor[destino]:
+				factor[destino] = numero_factor 
+				padre[destino] = v
+				heap_factor.encolar((destino, factor[destino]))
 
 	return padre, factor 
 
 
-def _camino_escalas(grafo, origen, distino):
+def _camino_escalas(grafo, origen, destino):
 	vistados = set()
 	padre = {}
 	orden = {}
@@ -90,7 +46,7 @@ def _camino_escalas(grafo, origen, distino):
 				vistados.add(w)
 				padre[w] = v
 				orden[w] = orden[v] + 1
-				if w == distino:
+				if w == destino:
 					break
 
 				cola_aero.encolar(w)
@@ -227,8 +183,45 @@ def imprimir_centralidad(funcion, grafo, n):
 	print(resultado)
 
 
+def nueva_aerolinea(grafo, archivo):
+	grafo_minimo = prim(grafo)
+	with open(archivo, "w") as f:
+		rutas = grafo_minimo.obtener_aristas()
+		for ruta in rutas:
+			origen, destino = ruta
+			linea = origen + " -> " + destino
+			f.write(linea + ", ")
+		print("OK")
 
 
+def comparar_pesos(peso1, peso2):
+	dato1 = peso1[INDICE_PESO]
+	dato2 = peso2[INDICE_PESO]
+	return (dato1-dato2)*(-1)
+
+def prim(grafo):
+	vertice = grafo.obtener_vertice_aleatorio()
+	visitados = set()
+	visitados.add(vertice)
+	heap = Heap(comparar_pesos)
+	for w in grafo.adyacentes(vertice):
+		heap.encolar(((vertice, w), grafo.peso(vertice, w)))
+	grafo_minimo = Grafo()
+	while not heap.esta_vacio():
+		dato = heap.desencolar()
+		w = (dato[0][1])
+		v = (dato[0][0])
+		peso = (dato[1])
+		if w in visitados:
+			continue
+		grafo_minimo.agregar_vertice(v)
+		grafo_minimo.agregar_vertice(w)
+		grafo_minimo.agregar_arista(v, w, peso)
+		visitados.add(w)
+		for adyacente in grafo.adyacentes(w):
+			if adyacente not in visitados:
+				heap.encolar(((w, adyacente), grafo.peso(w, adyacente)))
+	return grafo_minimo
 
 
 
