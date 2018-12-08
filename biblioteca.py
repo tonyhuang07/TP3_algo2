@@ -1,5 +1,6 @@
 INIFITO = 99999999
-
+import grafo
+import heap
 
 
 class Vuelo:
@@ -55,16 +56,16 @@ def camino_mas(grafo, origen):
 
 	factor[origen] = 0
 	padre[origen] = None
-	heap_factor = heap() #falta la clase heap
-	heap_factor.encolar(origen,factor[origen])
+	heap_factor = heap_minimo() #falta la clase heap
+	heap_factor.encolar((origen,factor[origen]))
 	while not heap_factor.esta_vacia():
-		v = heap_factor.desencolar()
+		(v, factor) = heap_factor.desencolar()
 		for distino in grafo.adyacentes(v):
-			numero_factor = factor[v] + grafo.peso(v,distino)
+			numero_factor = factor[v] + grafo.peso(v, distino)
 			if numero_factor < factor[distino]:
 				factor[distino] = fnumero_factor 
 				padre[distino] = v
-				heap_factor.encolar(distino, factor[distino])
+				heap_factor.encolar((distino, factor[distino]))
 
 	return padre, factor 
 
@@ -89,6 +90,18 @@ def camino_escalas(grafo, origen, distino):
 				pila_aero.apilar(w)
 
 	return padre, orden
+
+def centralidad (grafo):
+	cent = {}
+	for v in grafo:
+		cent[v] = 0
+	for v in grafo:
+		padre, frecuencia = camimo_mas(grafo, v)
+		cent_aux = {}
+
+		for w in grafo:
+			cent_aux[w] = 0;
+			
 
 
 
