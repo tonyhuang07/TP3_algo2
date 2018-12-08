@@ -1,6 +1,7 @@
 INIFITO = 99999999
 import grafo
 import heap
+import random
 
 
 
@@ -123,6 +124,34 @@ def ordenar_vertice (grafo, factor):
 	vertice_ordenados.sort(key=lambda x: factor[x], reverse=True)
 
 	return vertice_ordenados
+
+
+def vertices_aleatorios(pesos):
+    total = sum(pesos.values())
+    rand = random.uniform(0, total)
+    acum = 0
+    for vertice, peso_arista in pesos.items():
+        if acum + peso_arista >= rand:
+            return vertice
+        acum += peso_arista
+
+def centralidad_aprox(grafo):
+	cent = {}
+	for v in grafo:
+		cent[v] = 0
+
+	for v in grafo:
+		pesos = {}
+		for w in grafo.adyacentes(v):
+			pesos[w] = grafo.obtener_peso(v,w);
+		vertice = vertices_aleatorios(pesos)
+		cent[vertice] += 1
+
+	return cent
+
+
+
+
 
 
 
