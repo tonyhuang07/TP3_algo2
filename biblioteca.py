@@ -56,7 +56,7 @@ def camino_mas(grafo, origen):
 
 	factor[origen] = 0
 	padre[origen] = None
-	heap_factor = heap_minimo() #falta la clase heap
+	heap_factor = Heap_minimo() #falta la clase heap
 	heap_factor.encolar((origen,factor[origen]))
 	while not heap_factor.esta_vacia():
 		(v, factor) = heap_factor.desencolar()
@@ -76,7 +76,7 @@ def camino_escalas(grafo, origen, distino):
 	orden = {}
 	padre[origen] = None
 	orden [origen] = 0
-	pila_aero = pila()
+	pila_aero = Pila()
 	pila_aero.apilar(origen)
 	while not pila_aero.esta_vacia():
 		v = pila_aero.desapilar()
@@ -101,7 +101,24 @@ def centralidad (grafo):
 
 		for w in grafo:
 			cent_aux[w] = 0;
-			
+			vertices_ordenados = ordenar_vertices (grafo, frecuencia) #funcion ordenar filtrar los vertices infinitos
+
+		for w in vertices_ordenados:
+			cent_aux[padre[w]] += 1 + cen_aux[w]
+
+		for w in grafo:
+			if w == v:
+				continue
+			cent[w] += cent_aux[w]
+
+		return cent
+
+def ordenar_vertice (grafo, factor):
+	vertice_ordenados = diccionario.keys()
+	vertice_ordenados.sort(key=lambda x: factor[x], reverse=True)
+
+	return vertice_ordenados
+
 
 
 
