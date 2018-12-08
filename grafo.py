@@ -7,7 +7,7 @@ class Grafo:
 			return
 		self.aristas[dato] = []
 
-	def agregar_arista(self, origen, destino, peso)
+	def agregar_arista(self, origen, destino, peso):
 		if (destino, peso) in aristas:
 			return
 		self.aristas[origen].append((destino, peso))
