@@ -1,6 +1,8 @@
 INIFITO = 99999999
 from grafo import *
 from heap import *
+from cola import *
+from cola import *
 import random
 
 
@@ -72,28 +74,30 @@ def _camino_mas(grafo, origen):
 	return padre, factor 
 
 
-def camino_escalas(grafo, origen, distino):
+def _camino_escalas(grafo, origen, distino):
 	vistados = set()
 	padre = {}
 	orden = {}
 	padre[origen] = None
 	orden [origen] = 0
-	pila_aero = Pila()
-	pila_aero.apilar(origen)
-	while not pila_aero.esta_vacia():
-		v = pila_aero.desapilar()
+	cola_aero = Cola()
+	cola_aero.encolar(origen)
+	while not cola_aero.esta_vacia():
+		v = cola_aero.desencolar()
 		for w in grafo.adyacentes(v):
+
 			if w not in vistados:
+				vistados.add(w)
 				padre[w] = v
 				orden[w] = orden[v] + 1
 				if w == distino:
 					break
 
-				pila_aero.apilar(w)
+				cola_aero.encolar(w)
 
 	return padre, orden
 
-def centralidad (grafo):
+def _centralidad (grafo):
 	cent = {}
 	for v in grafo:
 		cent[v] = 0
@@ -135,7 +139,7 @@ def vertices_aleatorios(pesos):
             return vertice
         acum += peso_arista
 
-def centralidad_aprox(grafo):
+def _centralidad_aprox(grafo):
 	cent = {}
 	for v in grafo:
 		cent[v] = 0
@@ -152,31 +156,72 @@ def centralidad_aprox(grafo):
 
 
 def camino_mas(grafo, ciudad_origen, ciudad_destino, ciudades):
-	caminos_minimos = {}
 
-	for origen in ciudades[ciudad_origen]:
-		print(origen)
-		for destino in ciudades[ciudad_destino]:
-			# print('{}-{}'.format(origen,destino))
-			padre, factor = _camino_mas(grafo, origen)
-			for origen,destino in factor.items():
-				print('{}:{}'.format(origen,destino))
+	return imprimir_camino(_camino_mas, grafo, ciudad_origen, ciudad_destino, ciudades)
+
+
+	# caminos_minimos = {}
+
+	# for origen in ciudades[ciudad_origen]:
+	# 	print(origen)
+	# 	for destino in ciudades[ciudad_destino]:
+	# 		padre, factor = _camino_mas(grafo, origen)
 	# 		vuelos = []
-	# 		ciudad_actual = destino
-	# 		while True:
-	# 			vuelos.append(ciudad_actual)
-	# 			ciudad_actual = padre[destino]
-	# 			if ciudad_actual == origen:
-	# 				break
+	# 		aero_actual = destino
+	# 		while aero_actual != origen:
+	# 			vuelos.append(aero_actual)
+	# 			aero_actual = padre[aero_actual]
+
+	# 		vuelos.append(origen)
+
 	# 		caminos_minimos[vuelos] = factor[destino]
 
 	# caminos = list(caminos_minimos)
-	# camino.sort(key=lambda x: caminos_minimos[x])
-	# for i in range(len(camino)-1,0,-1):
-	# 	print ('{}->'.format(camino[i]),end = "")
+	# caminos.sort(key = lambda x: caminos_minimos[x])
+	# resultado = " -> ".join(caminos[0][::-1])
+	# print(resultado)
+def camino_escalas(grafo, ciudad_origen, ciudad_destino, ciudades):
 
-	# print(ok[0],end = "")
+	return imprimir_camino(_camino_escalas, grafo, ciudad_origen, ciudad_destino, ciudades)
 
+
+def imprimir_camino(funcion, grafo, ciudad_origen, ciudad_destino, ciudades):
+	menor_factor = INIFITO
+	lista_ciudades = []
+	for origen in ciudades[ciudad_origen]:
+		for destino in ciudades[ciudad_destino]:
+			padre, factor = funcion(grafo, origen, destino)
+
+			sub_lista = []
+			aero_actual = destino
+			while aero_actual != origen:
+				sub_lista.append(aero_actual)
+				aero_actual = padre[aero_actual]
+
+			sub_lista.append(origen)
+			
+			if factor[destino] < menor_factor:
+				lista_ciudades = sub_lista
+				menor_factor = factor[destino] 
+
+
+	resultado= " -> ".join(lista_ciudades[::-1])
+	print(resultado)
+
+
+def centralidad(grafo,n):
+	return imprimir_centralidad(_centralidad, grafo, n)
+
+
+def centralidad_aprox(grafo,n):
+	return imprimir_centralidad(_centralidad_aprox, grafo, n)
+
+def imprimir_centralidad(funcion, grafo, n):
+	dic = funcion(grafo)
+	lista = list(resultado)
+	lista.sort(key = lambda x: dic[x],reverse = True)
+	resultado = ", ".join(lista[0:n])
+	print(resultado)
 
 
 

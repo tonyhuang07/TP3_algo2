@@ -124,10 +124,10 @@ def main():
 				print("Error en comando camino_mas")
 
 		elif (comando == "camino_escalas" and cantidad_parametros == 2):
-			biblioteca.camino_escalas(grafo[GRAFO_TIEMPO], campos[1], campos[2])
+			biblioteca.camino_escalas(grafos[GRAFO_TIEMPO], campos[1], campos[2],ciudades)
 
 		elif (comando == "centralidad" and cantidad_parametros == 1):
-			biblioteca.centralidad(grafo[GRAFO_CANTIDAD], campos[1])
+			biblioteca.centralidad(grafos[GRAFO_CANTIDAD], campos[1])
 
 		else:
 			print("Error en comando")
