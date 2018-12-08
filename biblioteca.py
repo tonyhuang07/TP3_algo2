@@ -60,9 +60,9 @@ def _camino_mas(grafo, origen):
 
 	factor[origen] = 0
 	padre[origen] = None
-	heap_factor = Heap_minimo() 
+	heap_factor = Heap(comparar_pesos) 
 	heap_factor.encolar((origen,factor[origen]))
-	while not heap_factor.esta_vacia():
+	while not heap_factor.esta_vacio():
 		v = heap_factor.desencolar()[0]
 		for distino in grafo.adyacentes(v):
 			numero_factor = factor[v] + grafo.peso(v, distino)
@@ -190,7 +190,10 @@ def imprimir_camino(funcion, grafo, ciudad_origen, ciudad_destino, ciudades):
 	lista_ciudades = []
 	for origen in ciudades[ciudad_origen]:
 		for destino in ciudades[ciudad_destino]:
-			padre, factor = funcion(grafo, origen, destino)
+			if(funcion == _camino_escalas):
+				padre, factor = funcion(grafo, origen, destino)
+			else:
+				padre, factor = funcion(grafo, origen)
 
 			sub_lista = []
 			aero_actual = destino
