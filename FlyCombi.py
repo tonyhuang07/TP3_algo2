@@ -1,5 +1,5 @@
 import sys
-import grafo as grafo
+import grafo 
 import biblioteca
 """
 class Vuelo:

@@ -1,4 +1,4 @@
-FACTOR 1
+FACTOR = 1
 
 class Heap_minimo:
 	def __init__(self):
@@ -27,7 +27,7 @@ class Heap_minimo:
 
 
 		dato = self.lista[0]
-		self.cantidad --
+		self.cantidad -=1
 		self.lista[0] = self.lista[self.cantidad]
 		self.downheap(self.lista, self.cantidad, 0)
 		return dato
@@ -38,27 +38,28 @@ class Heap_minimo:
 
 	def upheap(arreglo, posicion):
 		if not posicion:
-			return;
+			return
 		padre = (posicion - 1)/2
 		if(arreglo[padre][FACTOR] < arreglo[posicion][FACTOR]):
 			arreglo[padre], arreglo[posicion] = arreglo[posicion], arreglo[padre]
 			upheap(arreglo, padre)
 
 	def downheap(arreglo, cantidad, posicion):
-		if posicion >=cant:
+		if posicion >=canttidad:
 			return
 		minimo = posicion;
 		izq = 2 * posicion + 1;
 		der = 2 * posicion + 2;
-		if izq < cant and arreglo[izq][FACTOR] > arreglo[minomo][FACTOR]
-			minimo = izq;
+		if izq < cant and arreglo[izq][FACTOR] > arreglo[minomo][FACTOR]:
+			minimo = izq
 
-		if der < cant and arreglo[der][FACTOR] > arreglo[minomo][FACTOR]
-			minimo = der;
+		if der < cant and arreglo[der][FACTOR] > arreglo[minomo][FACTOR]:
+			minimo = der
 
-		if minimo != posicion
+		if minimo != posicion:
 			arreglo[posicion], arreglo[minimo] = arreglo[minomo], arreglo[posicion
-			downheap(arreglo, cant, max, cmp);
+			downheap(arreglo, cantidad, minimo)
+
 
 
 
