@@ -12,7 +12,7 @@ class Grafo:
 			return
 		self.aristas[origen].append((destino, peso))
 
-	def obtener_adyacentes(self, vertice):
+	def adyacentes(self, vertice):
 		adyacentes = []
 		for destino, peso in self.aristas[vertice]:
 			adyacentes.append(destino)
@@ -22,6 +22,14 @@ class Grafo:
 	def ver_conexiones(self):
 		for vertice in self.aristas:
 			print("\n {} tiene de adyacentes a: [{}]".format(vertice, self.aristas[vertice]))
+
+	def obtener_vertices(self):
+		return list(self.aristas)
+
+	def peso(self, origen, destino):
+		for tupla in self.aristas[origen]:
+			if tupla[0] == destino:
+				return tupla[1]
 '''
 	def obtener_peso_arista(self, origen, destino)
 		return self.aristas[origen][destino]

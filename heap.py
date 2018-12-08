@@ -8,21 +8,21 @@ class Heap_minimo:
 	def __len__(self):
 		return self.cantidad
 
-	def heap_encolar(self, dato):
-		self.lista[self.cantidad] = dato
-		self.upheap(self.lista, self.cantidad)
+	def encolar(self, dato):
+		self.lista.append(dato)
+		self.upheap(self.lista,self.cantidad)
 		self.cantidad +=1
 
-	def heap_esta_vacia(self):
+	def esta_vacia(self):
 		return self.cantidad ==0
 
-	def heap_ver_minimo(self):
-		if(heap_esta_vacia(self)):
+	def ver_minimo(self):
+		if(self.esta_vacia()):
 			return None
 		return self.lista[0]
 
-	def heap_desencolar(self):
-		if heap_esta_vacia(self):
+	def desencolar(self):
+		if self.esta_vacia():
 			raise Exception ('heap esta vacia')
 
 
@@ -32,33 +32,33 @@ class Heap_minimo:
 		self.downheap(self.lista, self.cantidad, 0)
 		return dato
 
-	def heapify(arreglo, n):
+	def heapify(self,arreglo, n):
 		for i in range (n/2, 1, -1):
 			self.downheap(arreglo, n, i-1)
 
-	def upheap(arreglo, posicion):
+	def upheap(self,arreglo, posicion):
 		if not posicion:
 			return
-		padre = (posicion - 1)/2
-		if(arreglo[padre][FACTOR] < arreglo[posicion][FACTOR]):
+		padre = int((posicion - 1)/2)
+		if(arreglo[padre] < arreglo[posicion]):
 			arreglo[padre], arreglo[posicion] = arreglo[posicion], arreglo[padre]
-			upheap(arreglo, padre)
+			self.upheap(arreglo, padre)
 
-	def downheap(arreglo, cantidad, posicion):
-		if posicion >=canttidad:
+	def downheap(self,arreglo, cantidad, posicion):
+		if posicion >=cantidad:
 			return
 		minimo = posicion;
 		izq = 2 * posicion + 1;
 		der = 2 * posicion + 2;
-		if izq < cant and arreglo[izq][FACTOR] > arreglo[minomo][FACTOR]:
+		if izq < cantidad and arreglo[izq] > arreglo[minimo]:
 			minimo = izq
 
-		if der < cant and arreglo[der][FACTOR] > arreglo[minomo][FACTOR]:
+		if der < cantidad and arreglo[der]> arreglo[minimo]:
 			minimo = der
 
 		if minimo != posicion:
-			arreglo[posicion], arreglo[minimo] = arreglo[minomo], arreglo[posicion]
-			downheap(arreglo, cantidad, minimo)
+			arreglo[posicion], arreglo[minimo] = arreglo[minimo], arreglo[posicion]
+			self.downheap(arreglo, cantidad, minimo)
 
 
 

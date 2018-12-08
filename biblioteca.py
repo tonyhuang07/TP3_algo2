@@ -1,6 +1,6 @@
 INIFITO = 99999999
-import grafo
-import heap
+from grafo import *
+from heap import *
 import random
 
 
@@ -50,7 +50,7 @@ import random
 # 		return self.longitud
 
 
-def camino_mas(grafo, origen):
+def _camino_mas(grafo, origen):
 	factor = {}
 	padre = {}
 	for v in grafo.obtener_vertices(): #falta la funcion
@@ -58,14 +58,14 @@ def camino_mas(grafo, origen):
 
 	factor[origen] = 0
 	padre[origen] = None
-	heap_factor = Heap_minimo() #falta la clase heap
+	heap_factor = Heap_minimo() 
 	heap_factor.encolar((origen,factor[origen]))
 	while not heap_factor.esta_vacia():
-		(v, factor) = heap_factor.desencolar()
+		v = heap_factor.desencolar()[0]
 		for distino in grafo.adyacentes(v):
 			numero_factor = factor[v] + grafo.peso(v, distino)
 			if numero_factor < factor[distino]:
-				factor[distino] = fnumero_factor 
+				factor[distino] = numero_factor 
 				padre[distino] = v
 				heap_factor.encolar((distino, factor[distino]))
 
@@ -148,6 +148,37 @@ def centralidad_aprox(grafo):
 		cent[vertice] += 1
 
 	return cent
+
+
+
+def camino_mas(grafo, ciudad_origen, ciudad_destino, ciudades):
+	caminos_minimos = {}
+
+	for origen in ciudades[ciudad_origen]:
+		print(origen)
+		for destino in ciudades[ciudad_destino]:
+			# print('{}-{}'.format(origen,destino))
+			padre, factor = _camino_mas(grafo, origen)
+			for origen,destino in factor.items():
+				print('{}:{}'.format(origen,destino))
+	# 		vuelos = []
+	# 		ciudad_actual = destino
+	# 		while True:
+	# 			vuelos.append(ciudad_actual)
+	# 			ciudad_actual = padre[destino]
+	# 			if ciudad_actual == origen:
+	# 				break
+	# 		caminos_minimos[vuelos] = factor[destino]
+
+	# caminos = list(caminos_minimos)
+	# camino.sort(key=lambda x: caminos_minimos[x])
+	# for i in range(len(camino)-1,0,-1):
+	# 	print ('{}->'.format(camino[i]),end = "")
+
+	# print(ok[0],end = "")
+
+
+
 
 
 

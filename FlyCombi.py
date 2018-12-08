@@ -117,9 +117,9 @@ def main():
 
 		elif (comando == "camino_mas" and cantidad_parametros == 3):
 			if (campos[1] == "rapido"):
-				biblioteca.camino_mas(grafos[GRAFO_TIEMPO], campos[2], campos[3])
+				biblioteca.camino_mas(grafos[GRAFO_TIEMPO], campos[2], campos[3], ciudades)
 			elif (campos[1] == "barato"):
-				biblioteca.camino_mas(grafos[GRAFO_PRECIO], campos[2], campos[3])
+				biblioteca.camino_mas(grafos[GRAFO_PRECIO], campos[2], campos[3], ciudades)
 			else:
 				print("Error en comando camino_mas")
 
