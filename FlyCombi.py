@@ -80,42 +80,40 @@ def cargar_vuelos(f, grafos):
 			campos = linea.strip().split(",")
 			indice_peso = INDICE_TIEMPO
 			for grafo in grafos:
-				grafo.crear_vertice(campos[INDICE_ORIGEN])
-				grafo.crear_vertice(campos[INDICE_DESTINO])
-				grafo.crear_arista(campos[INDICE_ORIGEN], campos[INDICE_DESTINO], campos[indice_peso])
+				grafo.agregar_vertice(campos[INDICE_ORIGEN])
+				grafo.agregar_vertice(campos[INDICE_DESTINO])
+				grafo.agregar_arista(campos[INDICE_ORIGEN], campos[INDICE_DESTINO], int(campos[indice_peso]))
 				indice_peso+=1
-			
-					
-"""Verificar casos base de recepcion de parametros invalidos"""
 
 def main():
 	if (len(sys.argv) == 1 or len(sys.argv) > 3):
-		raise Exception("Cantidad de parametros incorrecta")
+		print("Cantidad de parametros incorrecta")
+		return
 	ciudades, aeropuertos = cargar_aeropuertos(sys.argv[1])
 	grafos = []
 	cargar_vuelos(sys.argv[2], grafos)
-
-	print(ciudades)
-	print(aeropuertos)
-
-	"""
 	for linea in sys.stdin:
 		campos = linea.rstrip().split(" ")
+		linea = ",".join(campos)
+		campos = linea.rstrip().split(",")
 		comando = campos[0]
-		if (comando == "camino_mas"):
+		cantidad_parametros = len(campos)-1
+		
+		if (comando == "listar_operaciones"):
+			biblioteca.listar_operaciones()
 
-		elif (comando == "camino_escalas"):
+		elif (comando == "camino_mas" and cantidad_parametros == 3):
+			biblioteca.camino_mas(campos[1], campos[2], campos[3])
 
-		elif (comando == "centralidad"):
+		elif (comando == "camino_escalas" and cantidad_parametros == 2):
+			biblioteca.camino_escalas(campos[1], campos[2])
 
-		elif (comando == "nueva_aerolinea"):
-
-		elif (comando == "vacaciones"):
+		elif (comando == "centralidad" and cantidad_parametros == 1):
+			biblioteca.centralidad(campos[1])
 
 		else:
 			print("Error en comando")
-	"""
-
+		
 main()
 
 
