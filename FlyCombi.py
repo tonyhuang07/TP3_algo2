@@ -1,5 +1,5 @@
 import sys
-import grafo 
+from grafo import *
 import biblioteca
 """
 class Vuelo:
@@ -73,7 +73,7 @@ CANTIDAD_PESOS = 3
 
 def cargar_vuelos(f, grafos):
 	for i in range(CANTIDAD_PESOS):
-		nuevo_grafo = grafo.Grafo()
+		nuevo_grafo = Grafo()
 		grafos.append(nuevo_grafo)
 	with open(f, "r") as f:
 		for linea in f:

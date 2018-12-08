@@ -3,49 +3,50 @@ import grafo
 import heap
 
 
-class Vuelo:
 
-	def __init__(self, origen, destino, tiempo, precio, cantidad):
-		self.origen = origen
-		self.destino = destino
-		self.tiempo = tiempo
-		self.precio = precio
-		self.cantidad = cantidad
+# class Vuelo:
 
-	def obtener_origen(self)
-		return self.origen
+# 	def __init__(self, origen, destino, tiempo, precio, cantidad):
+# 		self.origen = origen
+# 		self.destino = destino
+# 		self.tiempo = tiempo
+# 		self.precio = precio
+# 		self.cantidad = cantidad
 
-	def obtener_destino(self)
-		return self.destino
+# 	def obtener_origen(self)
+# 		return self.origen
 
-	def obtener_tiempo(self)
-		return self.tiempo
+# 	def obtener_destino(self)
+# 		return self.destino
 
-	def obtener_precio(self)
-		return self.precio
+# 	def obtener_tiempo(self)
+# 		return self.tiempo
 
-	def obtener_cantidad(self)
-		return self.cantidad
+# 	def obtener_precio(self)
+# 		return self.precio
 
-class v:
+# 	def obtener_cantidad(self)
+# 		return self.cantidad
 
-	def __init__(self, ciudad, codigo, latitud, longitud):
-		self.ciudad = ciudad
-		self.codigo = codigo
-		self.latitud = latitud
-		self.longitud = longitud
+# class v:
 
-	def obtener_ciudad(self)
-		return self.ciudad
+# 	def __init__(self, ciudad, codigo, latitud, longitud):
+# 		self.ciudad = ciudad
+# 		self.codigo = codigo
+# 		self.latitud = latitud
+# 		self.longitud = longitud
 
-	def obtener_codigo(self)
-		return self.codigo
+# 	def obtener_ciudad(self)
+# 		return self.ciudad
 
-	def obtener_latitud(self)
-		return self.latitud
+# 	def obtener_codigo(self)
+# 		return self.codigo
 
-	def obtener_longitud(self)
-		return self.longitud
+# 	def obtener_latitud(self)
+# 		return self.latitud
+
+# 	def obtener_longitud(self)
+# 		return self.longitud
 
 
 def camino_mas(grafo, origen):
@@ -84,7 +85,7 @@ def camino_escalas(grafo, origen, distino):
 			if w not in vistados:
 				padre[w] = v
 				orden[w] = orden[v] + 1
-				if w = distino:
+				if w == distino:
 					break
 
 				pila_aero.apilar(w)
@@ -114,7 +115,11 @@ def centralidad (grafo):
 		return cent
 
 def ordenar_vertice (grafo, factor):
-	vertice_ordenados = diccionario.keys()
+	vertice_ordenados = list(factor)
+	for v in vertice_ordenados:
+		if factor[v] == INIFITO:
+			vertice_ordenados.remove(v)
+
 	vertice_ordenados.sort(key=lambda x: factor[x], reverse=True)
 
 	return vertice_ordenados

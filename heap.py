@@ -57,8 +57,9 @@ class Heap_minimo:
 			minimo = der
 
 		if minimo != posicion:
-			arreglo[posicion], arreglo[minimo] = arreglo[minomo], arreglo[posicion
+			arreglo[posicion], arreglo[minimo] = arreglo[minomo], arreglo[posicion]
 			downheap(arreglo, cantidad, minimo)
+
 
 
 
