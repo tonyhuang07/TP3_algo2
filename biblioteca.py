@@ -263,6 +263,43 @@ def prim(grafo):
 				heap.encolar(((w, adyacente), grafo.peso(w, adyacente)))
 	return grafo_minimo
 
+def vacaciones(grafo, origen, n, ciudades):
+	visitados = {}
+	for aero in ciudades[origen]:
+		visitados[aero] = None
+
+
+		for v in grafo.adyacentes(aero):
+			if v not in visitados:
+				visitados[v] = aero
+			else:
+				if hay_recorrido(grafo, aero,v,visitados,n-1):
+					visitados[v] = aero
+
+		if (len(visitados) == n):
+			break
+	
+	print(list(visitados))
+	#print("no hay recorrido")
+
+
+
+def hay_recorrido(grafo,origen,vertice,visitados, n):
+	if n == 0 :
+		if origen in grafo.adyacentes(vertice):
+			return True
+		else:
+			return False
+
+	for w in grafo.adyacentes(vertice):
+		if w not in visitados:
+			if hay_recorrido(grafo, origen, w, visitados, n-1):
+				visitados[w] = vertice
+
+	return False
+
+
+
 
 
 

@@ -86,6 +86,10 @@ def main():
 
 		elif (comando == "nueva_aerolinea" and cantidad_parametros == 1):
 			biblioteca.nueva_aerolinea(grafos[GRAFO_PRECIO], campos[1])
+
+		elif (comando == "vacaciones" and cantidad_parametros == 2):
+			biblioteca.vacaciones(grafos[GRAFO_PRECIO], campos[1], int(campos[2]), ciudades)
+
 		else:
 			print("Error en comando")
 		
