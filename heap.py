@@ -5,6 +5,11 @@ def comparar_pesos(peso1, peso2):
 	dato2 = peso2[INDICE_DATO]
 	return (dato1-dato2)*(-1)
 
+def _comparar_pesos(peso1, peso2):
+	dato1 = peso1[INDICE_DATO]
+	dato2 = peso2[INDICE_DATO]
+	return (dato1-dato2)
+
 class Heap:
 	def __init__(self, func_cmp):
 		self.lista = []

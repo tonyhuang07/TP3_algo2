@@ -8,7 +8,7 @@ from cola import *
 import random
 
 
-def _camino_mas(grafo, origen):
+def _camino_mas(grafo, origen, frecuencia):
 	factor = {}
 	padre = {}
 	for v in grafo.obtener_vertices():
@@ -16,7 +16,10 @@ def _camino_mas(grafo, origen):
 
 	factor[origen] = 0
 	padre[origen] = None
-	heap_factor = Heap(comparar_pesos) 
+	if frecuencia:
+		heap_factor = Heap(_comparar_pesos)
+	else:
+		heap_factor = Heap(comparar_pesos) 
 	heap_factor.encolar((origen,factor[origen]))
 	while not heap_factor.esta_vacio():
 		v = heap_factor.desencolar()[0]
@@ -54,34 +57,64 @@ def _camino_escalas(grafo, origen, destino):
 	return padre, orden
 
 def _centralidad (grafo):
+	# cent = {}
+	# for v in grafo.obtener_vertices(): 
+	# 	cent[v] = 0
+	# for v in grafo.obtener_vertices():
+	# 	for w in grafo.obtener_vertices():
+	# 		if v == w or grafo.esta_conectado(v,w):
+	# 			continue
+	# 		padre, frecuencia = _camino_mas(grafo, v, 1)
+			
+	# 		if not padre[w] : 
+	# 			continue 
+			
+	# 		actual = padre[w]
+
+	# 		while actual != v:
+	# 			cent[actual] += 1
+	# 			actual = padre[actual]
+
+	# return cent
+
 	cent = {}
-	for v in grafo:
+	for v in grafo.obtener_vertices():
 		cent[v] = 0
-	for v in grafo:
-		padre, frecuencia = camimo_mas(grafo, v)
+	for v in grafo.obtener_vertices():
+		padre, frecuencia = _camino_mas(grafo, v, 1)
 		cent_aux = {}
 
-		for w in grafo:
+		for w in grafo.obtener_vertices():
 			cent_aux[w] = 0;
-			vertices_ordenados = ordenar_vertices (grafo, frecuencia) #funcion ordenar filtrar los vertices infinitos
+			
+		vertices_ordenados = ordenar_vertices (grafo, frecuencia) #funcion ordenar filtrar los vertices infinitos
+	
+
 
 		for w in vertices_ordenados:
-			cent_aux[padre[w]] += 1 + cen_aux[w]
+			if padre[w]:
+				cent_aux[padre[w]] += 1 
+				cent_aux[padre[w]] += cent_aux[w]
 
-		for w in grafo:
+		for w in grafo.obtener_vertices():
 			if w == v:
 				continue
 			cent[w] += cent_aux[w]
 
+
 		return cent
 
-def ordenar_vertice (grafo, factor):
+def ordenar_vertices(grafo, factor):
 	vertice_ordenados = list(factor)
-	for v in vertice_ordenados:
-		if factor[v] == INIFITO:
-			vertice_ordenados.remove(v)
 
 	vertice_ordenados.sort(key=lambda x: factor[x], reverse=True)
+
+	vertice_actual = vertice_ordenados[0]
+	while factor[vertice_actual] == INIFITO:
+
+		vertice_ordenados.pop(0)
+		vertice_actual = vertice_ordenados[0]
+
 
 	return vertice_ordenados
 
@@ -97,15 +130,16 @@ def vertices_aleatorios(pesos):
 
 def _centralidad_aprox(grafo):
 	cent = {}
-	for v in grafo:
+	for v in grafo.obtener_vertices():
 		cent[v] = 0
 
-	for v in grafo:
+	for v in grafo.obtener_vertices():
 		pesos = {}
 		for w in grafo.adyacentes(v):
-			pesos[w] = grafo.obtener_peso(v,w);
+			pesos[w] = grafo.peso(v,w);
 		vertice = vertices_aleatorios(pesos)
-		cent[vertice] += 1
+		if vertice:
+			cent[vertice] += 1
 
 	return cent
 
@@ -149,7 +183,7 @@ def imprimir_camino(funcion, grafo, ciudad_origen, ciudad_destino, ciudades):
 			if(funcion == _camino_escalas):
 				padre, factor = funcion(grafo, origen, destino)
 			else:
-				padre, factor = funcion(grafo, origen)
+				padre, factor = funcion(grafo, origen, 0)
 
 			sub_lista = []
 			aero_actual = destino
@@ -177,9 +211,9 @@ def centralidad_aprox(grafo,n):
 
 def imprimir_centralidad(funcion, grafo, n):
 	dic = funcion(grafo)
-	lista = list(resultado)
+	lista = list(dic)
 	lista.sort(key = lambda x: dic[x],reverse = True)
-	resultado = ", ".join(lista[0:n])
+	resultado = ", ".join(lista[0:int(n)])
 	print(resultado)
 
 
@@ -198,6 +232,12 @@ def comparar_pesos(peso1, peso2):
 	dato1 = peso1[INDICE_PESO]
 	dato2 = peso2[INDICE_PESO]
 	return (dato1-dato2)*(-1)
+
+def _comparar_pesos(peso1, peso2):
+	dato1 = peso1[INDICE_DATO]
+	dato2 = peso2[INDICE_DATO]
+	return (dato1-dato2)
+
 
 def prim(grafo):
 	vertice = grafo.obtener_vertice_aleatorio()
