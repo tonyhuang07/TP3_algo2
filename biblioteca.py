@@ -263,40 +263,63 @@ def prim(grafo):
 				heap.encolar(((w, adyacente), grafo.peso(w, adyacente)))
 	return grafo_minimo
 
-def vacaciones(grafo, origen, n, ciudades):
-	visitados = {}
+def _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abadonados):
 	for aero in ciudades[origen]:
-		visitados[aero] = None
+		visitados[aero] = n
 
 
 		for v in grafo.adyacentes(aero):
-			if v not in visitados:
-				visitados[v] = aero
-			else:
-				if hay_recorrido(grafo, aero,v,visitados,n-1):
-					visitados[v] = aero
+			visitados[v] = n - 1
+			if hay_recorrido(grafo, aero,v,visitados,aeros_abadonados,n-1):
+				return True
 
-		if (len(visitados) == n):
-			break
-	
-	print(list(visitados))
+		del visitados[aero]
+
+	return False
 	#print("no hay recorrido")
 
 
 
-def hay_recorrido(grafo,origen,vertice,visitados, n):
-	if n == 0 :
+def hay_recorrido(grafo,origen,vertice,visitados, aeros_abadonados, n):
+	if n == 1 :
 		if origen in grafo.adyacentes(vertice):
 			return True
 		else:
+			del visitados[vertice]
+			aeros_abadonados[n].append(vertice)
 			return False
 
 	for w in grafo.adyacentes(vertice):
-		if w not in visitados:
-			if hay_recorrido(grafo, origen, w, visitados, n-1):
-				visitados[w] = vertice
 
+		if not w in visitados :
+			visitados[w] = n - 1
+			if hay_recorrido(grafo, origen, w, visitados, aeros_abadonados, n-1):
+				return True
+			aeros_abadonados[n-1].append(w)
+
+
+	del visitados[vertice]
+	aeros_abadonados[n].append(vertice)
 	return False
+
+def vacaciones(grafo, origen, n, ciudades):
+	visitados = {}
+	aeros_abadonados = {}
+	for i in range (n):
+		aeros_abadonados[i+1] = []
+
+	print(aeros_abadonados)
+
+
+	if _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abadonados):
+		lista = list(visitados)
+		lista.sort(key = lambda x: visitados[x],reverse = True)
+		lista.append(lista[0])
+		print(" -> ".join(lista))
+
+
+	else:
+		print("no hay recorrido")
 
 
 
