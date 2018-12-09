@@ -56,7 +56,7 @@ def _camino_escalas(grafo, origen, destino):
 
 	return padre, orden
 
-def _centralidad (grafo):
+def _centralidad(grafo):
 	# cent = {}
 	# for v in grafo.obtener_vertices(): 
 	# 	cent[v] = 0
@@ -78,45 +78,43 @@ def _centralidad (grafo):
 	# return cent
 
 	cent = {}
+
 	for v in grafo.obtener_vertices():
 		cent[v] = 0
+
 	for v in grafo.obtener_vertices():
-		padre, frecuencia = _camino_mas(grafo, v, 1)
+		padre, distancia = _camino_mas(grafo, v, 1)
 		cent_aux = {}
 
 		for w in grafo.obtener_vertices():
-			cent_aux[w] = 0;
-			
-		vertices_ordenados = ordenar_vertices (grafo, frecuencia) #funcion ordenar filtrar los vertices infinitos
-	
-
+			cent_aux[w] = 0	
+		vertices_ordenados = ordenar_vertices(grafo, distancia)
 
 		for w in vertices_ordenados:
-			if padre[w]:
-				cent_aux[padre[w]] += 1 
-				cent_aux[padre[w]] += cent_aux[w]
+			if w == v:
+				continue
+			cent_aux[padre[w]] += 1 
+			cent_aux[padre[w]] += cent_aux[w]
 
 		for w in grafo.obtener_vertices():
 			if w == v:
 				continue
 			cent[w] += cent_aux[w]
 
-
-		return cent
+	return cent
 
 def ordenar_vertices(grafo, factor):
-	vertice_ordenados = list(factor)
+	vertices_ordenados = list(factor)
 
-	vertice_ordenados.sort(key=lambda x: factor[x], reverse=True)
+	vertices_ordenados.sort(key=lambda x: factor[x], reverse=True)
 
-	vertice_actual = vertice_ordenados[0]
+	vertice_actual = vertices_ordenados[0]
+
 	while factor[vertice_actual] == INIFITO:
+		vertices_ordenados.pop(0)
+		vertice_actual = vertices_ordenados[0]
 
-		vertice_ordenados.pop(0)
-		vertice_actual = vertice_ordenados[0]
-
-
-	return vertice_ordenados
+	return vertices_ordenados
 
 
 def vertices_aleatorios(pesos):
@@ -319,9 +317,7 @@ def vacaciones(grafo, origen, n, ciudades):
 
 
 	else:
-		print("no hay recorrido")
-
-
+		print("No hay recorrido")
 
 
 

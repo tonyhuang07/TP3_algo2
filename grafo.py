@@ -2,6 +2,9 @@ class Grafo:
 	def __init__(self):
 		self.aristas = {}
 
+	def __len__(self):
+		return len(self.aristas)
+
 	def agregar_vertice(self, dato):
 		if dato in self.aristas:
 			return
@@ -43,21 +46,3 @@ class Grafo:
 
 	def obtener_vertice_aleatorio(self):
 		return list(self.aristas)[0]
-'''
-	def obtener_peso_arista(self, origen, destino)
-		return self.aristas[origen][destino]
-'''
-'''
-class Arista:
-	def __init__(self, origen, destino, peso)
-		self.origen = origen
-		self.destino = destino
-		self.peso = peso
-
-class Vertice:
-	def __init__(self, dato):
-		self.dato = dato
-
-	def obtener_dato(self):
-		return self.dato
-'''

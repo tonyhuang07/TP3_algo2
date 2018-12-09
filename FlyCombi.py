@@ -81,6 +81,9 @@ def main():
 		elif (comando == "camino_escalas" and cantidad_parametros == 2):
 			biblioteca.camino_escalas(grafos[GRAFO_TIEMPO], campos[1], campos[2],ciudades)
 
+		elif (comando == "centralidad_aprox" and cantidad_parametros == 1):
+			biblioteca.centralidad_aprox(grafos[GRAFO_CANTIDAD], campos[1])
+
 		elif (comando == "centralidad" and cantidad_parametros == 1):
 			biblioteca.centralidad(grafos[GRAFO_CANTIDAD], campos[1])
 
