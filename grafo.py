@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 class Grafo:
 	def __init__(self):
 		self.aristas = {}

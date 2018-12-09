@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 class Nodo:
 
 	def __init__(self,dato):

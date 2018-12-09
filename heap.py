@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 INDICE_DATO = 1
 
 def comparar_pesos(peso1, peso2):
