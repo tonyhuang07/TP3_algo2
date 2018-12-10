@@ -269,12 +269,15 @@ def prim(grafo):
 				heap.encolar(((w, adyacente), grafo.peso(w, adyacente)))
 	return grafo_minimo
 
-def _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abandonados):
+def _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abadonados):
+	ok = True
 	for aero in ciudades[origen]:
 		visitados[aero] = n
+
+
 		for v in grafo.adyacentes(aero):
 			visitados[v] = n - 1
-			if hay_recorrido(grafo, aero, v, visitados, aeros_abandonados, n-1):
+			if hay_recorrido(grafo, aero,v,visitados,aeros_abadonados,n-1,ok):
 				return True
 
 		del visitados[aero]
@@ -284,38 +287,48 @@ def _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abandonados):
 
 
 
-def hay_recorrido(grafo, origen, vertice, visitados, aeros_abandonados, n):
-	if n==1:
+def hay_recorrido(grafo,origen,vertice,visitados, aeros_abadonados, n, ok):
+	if n == 1 :
 		if origen in grafo.adyacentes(vertice):
 			return True
 		else:
 			del visitados[vertice]
-			aeros_abandonados_n = aeros_abandonados[n]
-			aeros_abandonados_n.append(vertice)
-			aeros_abandonados[n] = aeros_abandonados_n
+			# print('{}->{},en {} caminos no hay forma'.format(vertice, origen, n))
+			aeros_abadonados[n].append(vertice)
 			return False
+	if n ==2 :
+		for w in grafo.adyacentes(vertice):
+			if w not in grafo.adyacentes(origen):
+				del visitados[vertice]
+				aeros_abadonados[n-1].append(w)
+				return False
 
 	for w in grafo.adyacentes(vertice):
-		#print("\nAeropuertos abandonados: \n\n")
-		#print(aeros_abandonados)
-		if w not in visitados and  w not in aeros_abandonados[n-1]:
-			visitados[w] = n-1
-			if hay_recorrido(grafo, origen, w, visitados, aeros_abandonados, n-1):
+		if w in visitados:
+			ok = False
+
+		if not w in visitados and w not in aeros_abadonados[n-1]:
+			visitados[w] = n - 1
+			if hay_recorrido(grafo, origen, w, visitados, aeros_abadonados, n-1, ok):
 				return True
+			
+
+
 	del visitados[vertice]
-	aeros_abandonados_n = aeros_abandonados[n]
-	aeros_abandonados_n.append(vertice)
-	aeros_abandonados[n] = aeros_abandonados_n
+	if ok:
+		aeros_abadonados[n].append(vertice)
+	print('{}->{},en {} caminos no hay forma'.format(vertice, origen, n))
 	return False
 
 def vacaciones(grafo, origen, n, ciudades):
-
 	visitados = {}
-	aeros_abandonados = {}
+	aeros_abadonados = {}
 	for i in range (n):
-		aeros_abandonados[i+1] = []
+		aeros_abadonados[i+1] = []
 
-	if _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abandonados):
+	print(aeros_abadonados)
+
+	if _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abadonados):
 		lista = list(visitados)
 		lista.sort(key = lambda x: visitados[x],reverse = True)
 		lista.append(lista[0])

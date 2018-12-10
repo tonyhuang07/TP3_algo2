@@ -43,6 +43,7 @@ def cargar_vuelos(f, grafos):
 				grafo.agregar_vertice(campos[INDICE_ORIGEN])
 				grafo.agregar_vertice(campos[INDICE_DESTINO])
 				grafo.agregar_arista(campos[INDICE_ORIGEN], campos[INDICE_DESTINO], int(campos[indice_peso]))
+				grafo.agregar_arista(campos[INDICE_DESTINO], campos[INDICE_ORIGEN], int(campos[indice_peso]))
 				indice_peso+=1
 
 def eliminar_espacio(linea):
