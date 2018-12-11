@@ -2,6 +2,7 @@
 INIFITO = 99999999
 INDICE_PESO = 1
 INDICE_ARISTA = 0
+CANTIDAD_VERTICE = 300
 from grafo import *
 from heap import *
 from cola import *
@@ -91,12 +92,13 @@ def _centralidad(grafo):
 		cent[v] = 0
 
 	for v in grafo.obtener_vertices():
-		padre, distancia = _camino_mas(grafo, v, 1)
+		padre, distancia = _camino_mas(grafo, v, 0)
 		cent_aux = {}
 
 		for w in grafo.obtener_vertices():
 			cent_aux[w] = 0	
 		vertices_ordenados = ordenar_vertices(grafo, distancia)
+
 
 		for w in vertices_ordenados:
 			if w == v:
@@ -108,7 +110,7 @@ def _centralidad(grafo):
 			if w == v:
 				continue
 			cent[w] += cent_aux[w]
-
+	print(cent)
 	return cent
 
 def ordenar_vertices(grafo, factor):
@@ -139,13 +141,14 @@ def _centralidad_aprox(grafo):
 	for v in grafo.obtener_vertices():
 		cent[v] = 0
 
-	for v in grafo.obtener_vertices():
-		pesos = {}
-		for w in grafo.adyacentes(v):
-			pesos[w] = grafo.peso(v,w);
-		vertice = vertices_aleatorios(pesos)
-		if vertice:
-			cent[vertice] += 1
+	for i in range (CANTIDAD_VERTICE):
+		for v in grafo.obtener_vertices():
+			pesos = {}
+			for w in grafo.adyacentes(v):
+				pesos[w] = grafo.peso(v,w);
+			vertice = vertices_aleatorios(pesos)
+			if vertice:
+				cent[vertice] += 1
 
 	return cent
 
@@ -231,7 +234,7 @@ def nueva_aerolinea(grafo, archivo):
 			origen, destino = ruta
 			linea = origen + " -> " + destino
 			f.write(linea + ", ")
-		print("OK")
+		print("todo_visitado")
 
 
 def comparar_pesos(peso1, peso2):
@@ -270,14 +273,14 @@ def prim(grafo):
 	return grafo_minimo
 
 def _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abadonados):
-	ok = True
+	todo_visitado = True
 	for aero in ciudades[origen]:
 		visitados[aero] = n
 
 
 		for v in grafo.adyacentes(aero):
 			visitados[v] = n - 1
-			if hay_recorrido(grafo, aero,v,visitados,aeros_abadonados,n-1,ok):
+			if hay_recorrido(grafo, aero,v,visitados,aeros_abadonados,n-1,todo_visitado):
 				return True
 
 		del visitados[aero]
@@ -287,7 +290,7 @@ def _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abadonados):
 
 
 
-def hay_recorrido(grafo,origen,vertice,visitados, aeros_abadonados, n, ok):
+def hay_recorrido(grafo,origen,vertice,visitados, aeros_abadonados, n, todo_visitado):
 	if n == 1 :
 		if origen in grafo.adyacentes(vertice):
 			return True
@@ -296,26 +299,26 @@ def hay_recorrido(grafo,origen,vertice,visitados, aeros_abadonados, n, ok):
 			# print('{}->{},en {} caminos no hay forma'.format(vertice, origen, n))
 			aeros_abadonados[n].append(vertice)
 			return False
-	if n ==2 :
-		for w in grafo.adyacentes(vertice):
-			if w not in grafo.adyacentes(origen):
-				del visitados[vertice]
-				aeros_abadonados[n-1].append(w)
-				return False
+	# if n ==2 :
+	# 	for w in grafo.adyacentes(vertice):
+	# 		if w not in grafo.adyacentes(origen):
+	# 			del visitados[vertice]
+	# 			aeros_abadonados[n-1].append(w)
+	# 			return False
 
 	for w in grafo.adyacentes(vertice):
-		if w in visitados:
-			ok = False
+		if w not in aeros_abadonados[n-1]:
+			todo_visitado = False
 
 		if not w in visitados and w not in aeros_abadonados[n-1]:
 			visitados[w] = n - 1
-			if hay_recorrido(grafo, origen, w, visitados, aeros_abadonados, n-1, ok):
+			if hay_recorrido(grafo, origen, w, visitados, aeros_abadonados, n-1, todo_visitado):
 				return True
 			
 
 
 	del visitados[vertice]
-	if ok:
+	if todo_visitado:
 		aeros_abadonados[n].append(vertice)
 	print('{}->{},en {} caminos no hay forma'.format(vertice, origen, n))
 	return False
