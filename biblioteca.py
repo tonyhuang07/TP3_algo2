@@ -3,6 +3,11 @@ INIFITO = 99999999
 INDICE_PESO = 1
 INDICE_ARISTA = 0
 CANTIDAD_VERTICE = 300
+INDICE_ORIGEN = 0
+INDICE_DESTINO = 1
+INDICE_TIEMPO = 2
+INDICE_PRECIO = 3
+INDICE_CANTIDAD_VUELOS = 4
 from grafo import *
 from heap import *
 from cola import *
@@ -12,12 +17,13 @@ import random
 def listar_operaciones():
 	print("camino_mas")
 	print("camino_escalas")
-	#print("centralidad")
+	print("vacaciones")
 	print("centralidad_aprox")
 	print("nueva_aerolinea")
-	print("vacaciones")
+	#print("centralidad")
+	
 
-def _camino_mas(grafo, origen, frecuencia):
+def _camino_mas(grafo, origen, frecuencia, es_centralidad):
 	factor = {}
 	padre = {}
 	for v in grafo.obtener_vertices():
@@ -33,7 +39,10 @@ def _camino_mas(grafo, origen, frecuencia):
 	while not heap_factor.esta_vacio():
 		v = heap_factor.desencolar()[0]
 		for destino in grafo.adyacentes(v):
-			numero_factor = factor[v] + grafo.peso(v, destino)
+			if (es_centralidad):
+				numero_factor = factor[v] + 1/(grafo.peso(v, destino))
+			else:
+				numero_factor = factor[v] + grafo.peso(v, destino)
 			if numero_factor < factor[destino]:
 				factor[destino] = numero_factor 
 				padre[destino] = v
@@ -92,7 +101,7 @@ def _centralidad(grafo):
 		cent[v] = 0
 
 	for v in grafo.obtener_vertices():
-		padre, distancia = _camino_mas(grafo, v, 0)
+		padre, distancia = _camino_mas(grafo, v, 0, True)
 		cent_aux = {}
 
 		for w in grafo.obtener_vertices():
@@ -110,7 +119,7 @@ def _centralidad(grafo):
 			if w == v:
 				continue
 			cent[w] += cent_aux[w]
-	print(cent)
+	#print(cent)
 	return cent
 
 def ordenar_vertices(grafo, factor):
@@ -192,7 +201,7 @@ def imprimir_camino(funcion, grafo, ciudad_origen, ciudad_destino, ciudades):
 			if(funcion == _camino_escalas):
 				padre, factor = funcion(grafo, origen, destino)
 			else:
-				padre, factor = funcion(grafo, origen, 0)
+				padre, factor = funcion(grafo, origen, 0, False)
 
 			sub_lista = []
 			aero_actual = destino
@@ -226,15 +235,17 @@ def imprimir_centralidad(funcion, grafo, n):
 	print(resultado)
 
 
-def nueva_aerolinea(grafo, archivo):
+def nueva_aerolinea(grafo, archivo, vuelos):
 	grafo_minimo = prim(grafo)
 	with open(archivo, "w") as f:
 		rutas = grafo_minimo.obtener_aristas()
 		for ruta in rutas:
-			origen, destino = ruta
-			linea = origen + " -> " + destino
-			f.write(linea + ", ")
-		print("todo_visitado")
+			info_vuelo = vuelos[ruta]
+			linea = [ruta[INDICE_ORIGEN], ruta[INDICE_DESTINO], \
+			 info_vuelo[INDICE_TIEMPO], info_vuelo[INDICE_PRECIO], info_vuelo[INDICE_CANTIDAD_VUELOS]]
+			linea = ",".join(linea)
+			f.write(linea + "\n")
+		print("OK")
 
 
 def comparar_pesos(peso1, peso2):
@@ -271,6 +282,7 @@ def prim(grafo):
 			if adyacente not in visitados:
 				heap.encolar(((w, adyacente), grafo.peso(w, adyacente)))
 	return grafo_minimo
+
 
 def _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abadonados):
 	todo_visitado = True
@@ -320,7 +332,7 @@ def hay_recorrido(grafo,origen,vertice,visitados, aeros_abadonados, n, todo_visi
 	del visitados[vertice]
 	if todo_visitado:
 		aeros_abadonados[n].append(vertice)
-	print('{}->{},en {} caminos no hay forma'.format(vertice, origen, n))
+	#print('{}->{},en {} caminos no hay forma'.format(vertice, origen, n))
 	return False
 
 def vacaciones(grafo, origen, n, ciudades):
@@ -329,7 +341,7 @@ def vacaciones(grafo, origen, n, ciudades):
 	for i in range (n):
 		aeros_abadonados[i+1] = []
 
-	print(aeros_abadonados)
+	#print(aeros_abadonados)
 
 	if _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abadonados):
 		lista = list(visitados)
@@ -339,7 +351,7 @@ def vacaciones(grafo, origen, n, ciudades):
 
 
 	else:
-		print("No hay recorrido")
+		print("No se encontro recorrido")
 
 """
 def hay_recorrido(grafo, origen, vertice, visitados, aeros_abandonados, n):

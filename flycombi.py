@@ -32,12 +32,17 @@ GRAFO_PRECIO = 1
 GRAFO_CANTIDAD = 2
 
 def cargar_vuelos(f, grafos):
+	#vuelos = {} #Se guardaran del formato: clave: ORIG dato: DEST
+	datos_vuelos = {} #clave: (ORIG, DEST) datos: TIEMPO, PRECIO, CANTIDAD
 	for i in range(CANTIDAD_PESOS):
 		nuevo_grafo = Grafo()
 		grafos.append(nuevo_grafo)
 	with open(f, "r") as f:
+		vuelos = {}
 		for linea in f:
 			campos = linea.strip().split(",")
+			vuelos[(campos[INDICE_ORIGEN], campos[INDICE_DESTINO])] = campos
+			vuelos[(campos[INDICE_DESTINO], campos[INDICE_ORIGEN])] = campos
 			indice_peso = INDICE_TIEMPO
 			for grafo in grafos:
 				grafo.agregar_vertice(campos[INDICE_ORIGEN])
@@ -45,6 +50,7 @@ def cargar_vuelos(f, grafos):
 				grafo.agregar_arista(campos[INDICE_ORIGEN], campos[INDICE_DESTINO], int(campos[indice_peso]))
 				grafo.agregar_arista(campos[INDICE_DESTINO], campos[INDICE_ORIGEN], int(campos[indice_peso]))
 				indice_peso+=1
+	return vuelos
 
 def eliminar_espacio(linea):
 	instruccion = ""
@@ -62,7 +68,7 @@ def main():
 		return
 	ciudades, aeropuertos = cargar_aeropuertos(sys.argv[1])
 	grafos = []
-	cargar_vuelos(sys.argv[2], grafos)
+	vuelos = cargar_vuelos(sys.argv[2], grafos)
 	for linea in sys.stdin:
 		instruccion = eliminar_espacio(linea)
 		campos = instruccion.rstrip().split(",")
@@ -90,7 +96,7 @@ def main():
 			biblioteca.centralidad(grafos[GRAFO_CANTIDAD], campos[1])
 
 		elif (comando == "nueva_aerolinea" and cantidad_parametros == 1):
-			biblioteca.nueva_aerolinea(grafos[GRAFO_PRECIO], campos[1])
+			biblioteca.nueva_aerolinea(grafos[GRAFO_PRECIO], campos[1], vuelos)
 
 		elif (comando == "vacaciones" and cantidad_parametros == 2):
 			biblioteca.vacaciones(grafos[GRAFO_PRECIO], campos[1], int(campos[2]), ciudades)

@@ -2,6 +2,7 @@
 class Grafo:
 	def __init__(self):
 		self.aristas = {}
+		self.peso_total = 0
 
 	def __len__(self):
 		return len(self.aristas)
@@ -14,6 +15,7 @@ class Grafo:
 	def agregar_arista(self, origen, destino, peso):
 		if (destino, peso) in self.aristas[origen]:
 			return
+		self.peso_total += peso
 		self.aristas[origen].append((destino, peso))
 
 	def adyacentes(self, vertice):
@@ -44,6 +46,9 @@ class Grafo:
 		for tupla in self.aristas[origen]:
 			if tupla[0] == destino:
 				return tupla[1]
+
+	def obtener_peso_total(self):
+		return self.peso_total
 
 	def obtener_vertice_aleatorio(self):
 		return list(self.aristas)[0]
