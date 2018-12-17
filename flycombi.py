@@ -104,6 +104,9 @@ def main():
 		elif (comando == "itinerario" and cantidad_parametros == 1):
 			biblioteca.itinerario(grafos[GRAFO_TIEMPO], campos[1], ciudades)
 
+		elif (comando == "recorrer_mundo_aprox" and cantidad_parametros == 1):
+			biblioteca.recorrer_mundo_aprox(grafos[GRAFO_PRECIO], campos[1], ciudades, aeropuertos)
+
 		else:
 			print("Error en comando")
 		

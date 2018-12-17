@@ -21,6 +21,8 @@ def listar_operaciones():
 	print("centralidad_aprox")
 	print("nueva_aerolinea")
 	print("centralidad")
+	print("itinerario")
+	print("recorrer_mundo_aprox")
 	
 
 def _camino_mas(grafo, origen, es_centralidad):
@@ -55,6 +57,7 @@ def _camino_escalas(grafo, origen, destino):
 	padres[origen] = None
 	orden[origen] = 0
 	cola_aero = Cola()
+
 	cola_aero.encolar(origen)
 	while not cola_aero.esta_vacia():
 		v = cola_aero.desencolar()
@@ -72,36 +75,18 @@ def _camino_escalas(grafo, origen, destino):
 	return padres, orden
 
 def _centralidad(grafo):
-	# cent = {}
-	# for v in grafo.obtener_vertices(): 
-	# 	cent[v] = 0
-	# for v in grafo.obtener_vertices():
-	# 	for w in grafo.obtener_vertices():
-	# 		if v == w or grafo.esta_conectado(v,w):
-	# 			continue
-	# 		padres, frecuencia = _camino_mas(grafo, v, 1)
-			
-	# 		if not padres[w] : 
-	# 			continue 
-			
-	# 		actual = padres[w]
-
-	# 		while actual != v:
-	# 			cent[actual] += 1
-	# 			actual = padres[actual]
-
-	# return cent
 
 	cent = {}
+	vertices = grafo.obtener_vertices()
 
-	for v in grafo.obtener_vertices():
+	for v in vertices:
 		cent[v] = 0
 
-	for v in grafo.obtener_vertices():
-		padres, distancia = _camino_mas(grafo, v, 0, True)
+	for v in vertices:
+		padres, distancia = _camino_mas(grafo, v, True)
 		cent_aux = {}
 
-		for w in grafo.obtener_vertices():
+		for w in vertices:
 			cent_aux[w] = 0	
 		vertices_ordenados = ordenar_vertices(grafo, distancia)
 
@@ -112,11 +97,10 @@ def _centralidad(grafo):
 			cent_aux[padres[w]] += 1 
 			cent_aux[padres[w]] += cent_aux[w]
 
-		for w in grafo.obtener_vertices():
+		for w in vertices:
 			if w == v:
 				continue
 			cent[w] += cent_aux[w]
-	#print(cent)
 	return cent
 
 def ordenar_vertices(grafo, factor):
@@ -162,49 +146,28 @@ def _centralidad_aprox(grafo):
 
 def camino_mas(grafo, ciudad_origen, ciudad_destino, ciudades):
 
-	return imprimir_camino(_camino_mas, grafo, ciudad_origen, ciudad_destino, ciudades)
+	print(" -> ".join(obtener_camino(_camino_mas, grafo, ciudad_origen, ciudad_destino, ciudades)))
 
 
-	# caminos_minimos = {}
-
-	# for origen in ciudades[ciudad_origen]:
-	# 	print(origen)
-	# 	for destino in ciudades[ciudad_destino]:
-	# 		padres, factor = _camino_mas(grafo, origen)
-	# 		vuelos = []
-	# 		aero_actual = destino
-	# 		while aero_actual != origen:
-	# 			vuelos.append(aero_actual)
-	# 			aero_actual = padres[aero_actual]
-
-	# 		vuelos.append(origen)
-
-	# 		caminos_minimos[vuelos] = factor[destino]
-
-	# caminos = list(caminos_minimos)
-	# caminos.sort(key = lambda x: caminos_minimos[x])
-	# resultado = " -> ".join(caminos[0][::-1])
-	# print(resultado)
 def camino_escalas(grafo, ciudad_origen, ciudad_destino, ciudades):
+	print(" -> ".join(obtener_camino(_camino_escalas, grafo, ciudad_origen, ciudad_destino, ciudades)))
 
-	return imprimir_camino(_camino_escalas, grafo, ciudad_origen, ciudad_destino, ciudades)
 
-
-def imprimir_camino(funcion, grafo, ciudad_origen, ciudad_destino, ciudades):
+def obtener_camino(funcion, grafo, ciudad_origen, ciudad_destino, ciudades):
 	menor_factor = INIFITO
 	lista_ciudades = []
 	for origen in ciudades[ciudad_origen]:
 		for destino in ciudades[ciudad_destino]:
 			if(funcion == _camino_escalas):
-				padres, factor = funcion(grafo, origen, destino)
+				padre, factor = funcion(grafo, origen, destino)
 			else:
-				padres, factor = funcion(grafo, origen, 0)
+				padre, factor = funcion(grafo, origen, False)
 
 			sub_lista = []
 			aero_actual = destino
 			while aero_actual != origen:
 				sub_lista.append(aero_actual)
-				aero_actual = padres[aero_actual]
+				aero_actual = padre[aero_actual]
 
 			sub_lista.append(origen)
 			
@@ -213,8 +176,8 @@ def imprimir_camino(funcion, grafo, ciudad_origen, ciudad_destino, ciudades):
 				menor_factor = factor[destino] 
 
 
-	resultado= " -> ".join(lista_ciudades[::-1])
-	print(resultado)
+	return lista_ciudades[::-1]
+
 
 
 def centralidad(grafo,n):
@@ -234,9 +197,10 @@ def imprimir_centralidad(funcion, grafo, n):
 
 def nueva_aerolinea(grafo, archivo, vuelos):
 	grafo_minimo = prim(grafo)
-	if(len(grafo_minimo)==len(grafo)):
-		print("La longitud es correcta...")
-	print("El peso total del nuevo grafo es: ", grafo_minimo.obtener_peso_total())
+	# if(len(grafo_minimo)==len(grafo)):
+	# 	print("La longitud es correcta...")
+	# print("El peso total del nuevo grafo es: ", grafo_minimo.obtener_peso_total())
+
 	with open(archivo, "w") as f:
 		rutas = grafo_minimo.obtener_aristas()
 		for ruta in rutas:
@@ -298,7 +262,6 @@ def _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abadonados):
 		del visitados[aero]
 
 	return False
-	#print("no hay recorrido")
 
 
 
@@ -308,15 +271,9 @@ def hay_recorrido(grafo,origen,vertice,visitados, aeros_abadonados, n, todo_visi
 			return True
 		else:
 			del visitados[vertice]
-			# print('{}->{},en {} caminos no hay forma'.format(vertice, origen, n))
+
 			aeros_abadonados[n].append(vertice)
 			return False
-	# if n ==2 :
-	# 	for w in grafo.adyacentes(vertice):
-	# 		if w not in grafo.adyacentes(origen):
-	# 			del visitados[vertice]
-	# 			aeros_abadonados[n-1].append(w)
-	# 			return False
 
 	for w in grafo.adyacentes(vertice):
 		if w not in aeros_abadonados[n-1]:
@@ -332,7 +289,7 @@ def hay_recorrido(grafo,origen,vertice,visitados, aeros_abadonados, n, todo_visi
 	del visitados[vertice]
 	if todo_visitado:
 		aeros_abadonados[n].append(vertice)
-	#print('{}->{},en {} caminos no hay forma'.format(vertice, origen, n))
+
 	return False
 
 def vacaciones(grafo, origen, n, ciudades):
@@ -341,7 +298,6 @@ def vacaciones(grafo, origen, n, ciudades):
 	for i in range (n):
 		aeros_abadonados[i+1] = []
 
-	#print(aeros_abadonados)
 
 	if _vacaciones(grafo, origen, n, ciudades, visitados, aeros_abadonados):
 		lista = list(visitados)
@@ -395,6 +351,30 @@ def itinerario(grafo, archivo, aeropuertos_ciudades):
 
 
 
+def recorrer_mundo_aprox(grafo, origen, ciudades, aeropuertos):
+	ciudad_actual = origen
+	visitados = set()
+	lista = []
+	aero = ciudades[origen][0]
+	visitados.add(aero)
+	lista.append(aero)
+	costo = 0
+	dic_aeros = _centralidad_aprox(grafo)
+	lista_aero = list(dic_aeros)
+	lista_aero.sort(key = lambda x: dic_aeros[x])
+	for aero in lista_aero:
+		if aero in visitados:
+			print(aero)
+			continue
+		visitados.add(aero)
+		sub_lista = obtener_camino(_camino_mas, grafo, ciudad_actual, aeropuertos[aero][0], ciudades)
+		for i in range(len(sub_lista)-1):
+			visitados.add(sub_lista[i])
+			costo += grafo.peso(sub_lista[i],sub_lista[i+1])
+
+		del sub_lista[0]
+		lista.extend(sub_lista)
+		ciudad_actual = aeropuertos[aero][0]
 
 
 
