@@ -189,9 +189,21 @@ def centralidad_aprox(grafo,n):
 
 def imprimir_centralidad(funcion, grafo, n):
 	dic = funcion(grafo)
-	lista = list(dic)
-	lista.sort(key = lambda x: dic[x],reverse = True)
-	resultado = ", ".join(lista[0:int(n)])
+	lista = []
+	heap = Heap(comparar_pesos)
+	indice = 1
+	for aero in dic:
+		if indice <= int(n):
+			heap.encolar((aero, dic[aero]))
+			indice += 1
+		else:
+		
+			heap.encolar((aero,dic[aero]))
+			heap.desencolar()
+	while not heap.esta_vacio():
+		(_aero, peso) = heap.desencolar()
+		lista.append(_aero)
+	resultado = ", ".join(lista[::-1])
 	print(resultado)
 
 
@@ -359,15 +371,12 @@ def recorrer_mundo_aprox(grafo, origen, ciudades, aeropuertos):
 	visitados.add(aero)
 	lista.append(aero)
 	costo = 0
-	dic_aeros = _centralidad_aprox(grafo)
-	lista_aero = list(dic_aeros)
-	lista_aero.sort(key = lambda x: dic_aeros[x])
-	for aero in lista_aero:
+	for aero in aeropuertos:
 		if aero in visitados:
-			print(aero)
 			continue
 		visitados.add(aero)
 		sub_lista = obtener_camino(_camino_mas, grafo, ciudad_actual, aeropuertos[aero][0], ciudades)
+
 		for i in range(len(sub_lista)-1):
 			visitados.add(sub_lista[i])
 			costo += grafo.peso(sub_lista[i],sub_lista[i+1])
@@ -375,6 +384,9 @@ def recorrer_mundo_aprox(grafo, origen, ciudades, aeropuertos):
 		del sub_lista[0]
 		lista.extend(sub_lista)
 		ciudad_actual = aeropuertos[aero][0]
+
+	print(" -> ".join(lista))
+	print("Costo: {}".format(costo))
 
 
 
