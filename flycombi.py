@@ -1,4 +1,15 @@
 #!/usr/bin/python3
+
+#########################################
+# Algoritmos y Programación II - TP3	#
+#										#
+# Corrector: Buchwald, Martín			#
+#										#
+# Alumnos:	 Huang, Yuhong				#
+#			 Klein, Santiago			#
+#										# 
+#########################################
+
 import sys
 from grafo import *
 import biblioteca
@@ -32,10 +43,9 @@ GRAFO_PRECIO = 1
 GRAFO_CANTIDAD = 2
 
 def cargar_vuelos(f, grafos):
-	#vuelos = {} #Se guardaran del formato: clave: ORIG dato: DEST
-	datos_vuelos = {} #clave: (ORIG, DEST) datos: TIEMPO, PRECIO, CANTIDAD
+	datos_vuelos = {}
 	for i in range(CANTIDAD_PESOS):
-		nuevo_grafo = Grafo()
+		nuevo_grafo = Grafo(True)
 		grafos.append(nuevo_grafo)
 	with open(f, "r") as f:
 		vuelos = {}
@@ -48,7 +58,6 @@ def cargar_vuelos(f, grafos):
 				grafo.agregar_vertice(campos[INDICE_ORIGEN])
 				grafo.agregar_vertice(campos[INDICE_DESTINO])
 				grafo.agregar_arista(campos[INDICE_ORIGEN], campos[INDICE_DESTINO], int(campos[indice_peso]))
-				grafo.agregar_arista(campos[INDICE_DESTINO], campos[INDICE_ORIGEN], int(campos[indice_peso]))
 				indice_peso+=1
 	return vuelos
 

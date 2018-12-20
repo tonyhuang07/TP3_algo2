@@ -1,8 +1,21 @@
 #!/usr/bin/python3
+
+#########################################
+# Algoritmos y Programación II - TP3	#
+#										#
+# Corrector: Buchwald, Martín			#
+#										#
+# Alumnos:	 Huang, Yuhong				#
+#			 Klein, Santiago			#
+#										# 
+#########################################
+
+
 class Grafo:
-	def __init__(self):
+	def __init__(self, es_no_dirigido):
 		self.aristas = {}
 		self.peso_total = 0
+		self.es_no_dirigido = es_no_dirigido
 
 	def __len__(self):
 		return len(self.aristas)
@@ -16,7 +29,13 @@ class Grafo:
 		if (destino, peso) in self.aristas[origen]:
 			return
 		self.peso_total += peso
-		self.aristas[origen].append((destino, peso))
+		aristas_origen = self.aristas[origen]
+		aristas_origen.append((destino, peso))
+		self.aristas[origen] = aristas_origen
+		if self.es_no_dirigido:
+			aristas_destino = self.aristas[destino]
+			aristas_destino.append((origen, peso))
+			self.aristas[destino] = aristas_destino
 
 	def adyacentes(self, vertice):
 		adyacentes = []

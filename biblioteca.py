@@ -145,7 +145,6 @@ def _centralidad_aprox(grafo):
 
 
 def camino_mas(grafo, ciudad_origen, ciudad_destino, ciudades):
-
 	print(" -> ".join(obtener_camino(_camino_mas, grafo, ciudad_origen, ciudad_destino, ciudades)))
 
 
@@ -209,9 +208,9 @@ def imprimir_centralidad(funcion, grafo, n):
 
 def nueva_aerolinea(grafo, archivo, vuelos):
 	grafo_minimo = prim(grafo)
-	# if(len(grafo_minimo)==len(grafo)):
-	# 	print("La longitud es correcta...")
-	# print("El peso total del nuevo grafo es: ", grafo_minimo.obtener_peso_total())
+	#if(len(grafo_minimo)==len(grafo)):
+ 		#print("La longitud es correcta...")
+	#print("El peso total del nuevo grafo es: ",grafo_minimo.obtener_peso_total())
 
 	with open(archivo, "w") as f:
 		rutas = grafo_minimo.obtener_aristas()
@@ -227,6 +226,7 @@ def nueva_aerolinea(grafo, archivo, vuelos):
 def comparar_pesos(peso1, peso2):
 	dato1 = peso1[INDICE_PESO]
 	dato2 = peso2[INDICE_PESO]
+	#print("VUELOS: ", peso1, peso2, "PRECIO:", peso1[INDICE_DATO], peso2[INDICE_DATO])
 	return (dato1-dato2)*(-1)
 
 def _comparar_pesos(peso1, peso2):
@@ -242,7 +242,7 @@ def prim(grafo):
 	heap = Heap(comparar_pesos)
 	for w in grafo.adyacentes(vertice):
 		heap.encolar(((vertice, w), grafo.peso(vertice, w)))
-	grafo_minimo = Grafo()
+	grafo_minimo = Grafo(True)
 	while not heap.esta_vacio():
 		dato = heap.desencolar()
 		w = (dato[0][1])
@@ -343,7 +343,7 @@ def orden_topologico(grafo):
 	return transformar_pila_a_lista(pila)
 
 def itinerario(grafo, archivo, aeropuertos_ciudades):
-	grafo_orden = Grafo()
+	grafo_orden = Grafo(False)
 	with open(archivo, 'r') as f:
 		linea = f.readline()
 		ciudades = linea.rstrip().split(",")
